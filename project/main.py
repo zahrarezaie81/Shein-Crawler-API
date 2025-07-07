@@ -31,7 +31,7 @@ def filter_products(
             "id": p.id,
             "title": p.title,
             "brand": {"id": p.brand.id, "name": p.brand.name} if p.brand else None,
-            "category": p.category.name if p.category else None,  # فقط اسم دسته‌بندی
+            "category": p.category.name if p.category else None,  
             "price": p.price,
             "discounted_price": p.discounted_price,
         })
