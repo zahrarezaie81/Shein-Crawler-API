@@ -9,7 +9,7 @@ This project is a web crawler and REST API that collects and serves product data
 Open a terminal and run:
 
 ```bash
-git clone <REPO_URL>
+git clone https://github.com/zahrarezaie81/Shein-Crawler-API.git
 cd Shein_Project
 ```
 
