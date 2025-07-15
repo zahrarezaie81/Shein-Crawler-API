@@ -1,17 +1,47 @@
-# Ignore Python virtual environment
+# Python virtual environment
 venv/
 
-# Byte-compiled / cache
+# Environment config and secrets
+.env
+.env.*
+
+# Python bytecode/cache files
 __pycache__/
 *.py[cod]
+.mypy_cache/
+.pytest_cache/
+.pyright/
 
-# Logs
-*.log
+# IDE/editor config files
+.vscode/
+.idea/
 
-# OS-specific
+# OS-specific files
 .DS_Store
 Thumbs.db
 
-# VSCode/IDE configs (optional)
-.vscode/
-.idea/
+# Log files and folders
+*.log
+logs/
+project/loggs/loggs_of_project/
+
+# Database files (local or temporary)
+*.sqlite3
+*.db
+
+# Auth/session sensitive files
+project/crawler/auth_data.json
+project/crawler/.playwright/
+
+# Playwright output or state files
+playwright-report/
+project/crawler/playwright.log
+.project_crawler_playwright_state.json
+
+# Build/dist artifacts (for packaging)
+dist/
+build/
+*.egg-info/
+
+# Alembic migration files (optional: only ignore if you're regenerating them each time)
+alembic/versions/*.py

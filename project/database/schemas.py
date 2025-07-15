@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 
-# --- Brand ---
+
 class BrandBase(BaseModel):
     name: str
 
@@ -14,24 +14,38 @@ class BrandCountOut(BaseModel):
     brand: str
     count: int
 
-# --- Product ---
+class BrandMini(BaseModel):
+    id: int
+    name: str
+    class Config:
+        from_attributes = True
+        
+
 class ProductOut(BaseModel):
     id: int
     title: str
-    brand: Optional[BrandOut] = None
-    category: Optional[str] = None
+    url : str
+    img_url : str
+    category: Optional[str]
     price: float
     discounted_price: Optional[float] = None
-    class Config:
-        from_attributes = True
 
-# --- For /content/ ---
+
 class ImageContentIn(BaseModel):
     url: str
 
 class ImageContentOut(BaseModel):
     base64: str
 
-# --- Status/Message Example ---
+
 class StatusOut(BaseModel):
     status: str
+
+
+class BrandMini(BaseModel):
+    id: int
+    name: str
+    class Config:
+        from_attributes = True
+
+

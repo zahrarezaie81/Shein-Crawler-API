@@ -1,79 +1,100 @@
-from fastapi import FastAPI, Depends, HTTPException, Query, BackgroundTasks
+from fastapi import FastAPI, Depends, HTTPException, Query
+from typing import Annotated
 from sqlalchemy.orm import Session
 from project.database.database import get_db
 from project.database import crud
-from project.database.schemas import BrandOut, BrandCountOut, ProductOut, ImageContentIn, ImageContentOut, StatusOut
+from project.database.schemas import BrandOut, BrandCountOut, ProductOut, ImageContentIn, ImageContentOut
 from project.image_processor.image_processor import image_url_to_base64
+from project.database.database import engine, Base
+from project.loggs.logger_config import logger
+import asyncio
+from project.crawler.shein_crawler import crawl_all_products
+from project.loggs.logger_config import logger
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="SHEIN")
 
-# =========== 1. GET /brands ===========
+is_crawling = False
+crawl_task = None
+
+
 @app.get("/brands", response_model=list[BrandOut])
-def get_brands(db: Session = Depends(get_db)):
+def get_brands(db: Annotated[Session, Depends(get_db)]):
     return crud.get_brands(db)
 
-# =========== 2. GET /brands/{brand}/count ===========
 @app.get("/brands/{brand}/count", response_model=BrandCountOut)
-def brand_count(brand: str, db: Session = Depends(get_db)):
+def brand_count(brand: str, db: Annotated[Session, Depends(get_db)]):
     count = crud.count_products_for_brand(db, brand)
     return {"brand": brand, "count": count}
 
 @app.get("/products/filter", response_model=list[ProductOut])
 def filter_products(
-    min: float = Query(0), 
-    max: float = Query(100000), 
-    db: Session = Depends(get_db)
+    db: Annotated[Session, Depends(get_db)],
+    min: float = Query(20), 
+    max: float = Query()
 ):
     products = crud.filter_products_by_price(db, min, max)
-    result = []
-    for p in products:
-        result.append({
+    return [
+        {
             "id": p.id,
             "title": p.title,
-            "brand": {"id": p.brand.id, "name": p.brand.name} if p.brand else None,
-            "category": p.category.name if p.category else None,  
+            "url" : p.url,
+            "img_url": p.image_urls,
+            "category": p.category.name if p.category else None,
             "price": p.price,
             "discounted_price": p.discounted_price,
-        })
-    return result
+        } for p in products
+    ]
 
 
-# # =========== 4. POST /crawl/start ===========
-# is_crawling = False
+@app.post("/crawl/start")
+async def start_crawl():
+    global crawl_task
+    if crawl_task and not crawl_task.done():
+        return {"message": "✅ A crawl task is already running."}
+    
+    logger.info("✅ Crawling started")
+    crawl_task = asyncio.create_task(crawl_all_products())
+    return {"message": "✅ Crawl task started"}
 
-# def fake_crawler():
-#     import time
-#     global is_crawling
-#     is_crawling = True
-#     for i in range(10):
-#         if not is_crawling:
-#             break
-#         print(f"Crawling... {i+1}/10")
-#         time.sleep(1)
-#     is_crawling = False
+    
+@app.post("/crawl/stop")
+async def stop_crawl():
+    global crawl_task
+    if not crawl_task:
+        return {"message": "⚠️ No crawl task has been started yet."}
+    if crawl_task.done():
+        return {"message": "✅ Crawl task already completed."}
 
-# @app.post("/crawl/start", response_model=StatusOut)
-# def start_crawl(background_tasks: BackgroundTasks):
-#     global is_crawling
-#     if is_crawling:
-#         return {"status": "Already running"}
-#     background_tasks.add_task(fake_crawler)
-#     return {"status": "Started"}
+    crawl_task.cancel()
+    try:
+        await crawl_task
+    except asyncio.CancelledError:
+        logger.info("❌ Crawl task was cancelled successfully.")
+        return {"message": "❌ Crawl task cancelled."}
+    except Exception as e:
+        logger.error(f"❌ Error during cancellation: {e}")
+        return {"message": f"❌ Failed to cancel task: {e}"}
 
-# # =========== 5. POST /crawl/stop ===========
-# @app.post("/crawl/stop", response_model=StatusOut)
-# def stop_crawl():
-#     global is_crawling
-#     if not is_crawling:
-#         return {"status": "No crawler running"}
-#     is_crawling = False
-#     return {"status": "Stopped"}
+    return {"message": "❌ Crawl task cancelled cleanly."}
+    
 
-# =========== 6. POST /content/ ===========
+
 @app.post("/content/", response_model=ImageContentOut)
 def get_image_content(item: ImageContentIn):
     try:
         base64str = image_url_to_base64(item.url)
         return {"base64": base64str}
     except Exception as e:
+        logger.error(f"❌ Image conversion error: {e}")
         raise HTTPException(status_code=400, detail=str(e))
+
+async def crawl_all_products_wrapper():
+    global is_crawling
+    await crawl_all_products(is_crawling_ref=lambda: is_crawling)
+    is_crawling = False
+
+
+
+
