@@ -46,7 +46,7 @@ From the `Shein-Crawler-API` root folder:
 
 ```bash
 python -m venv venv
-.env\Scriptsctivate
+.venv\Scripts\activate
 ```
 
 Then install the dependencies:
