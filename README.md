@@ -94,14 +94,94 @@ Edit the file `project/crawler/config.yaml`:
 
 ```yaml
 categories:
+  categories:
+
+  - main_category: "Women Clothing"
+    sub_category: "Dresses"
+    brand: ""    
+    max_count: 50
+
+
+  - main_category: "Women Clothing"
+    sub_category: "T-shirts"
+    brand: "INAWLY"    
+    max_count: 50  
+
+  - main_category: "Women Clothing"
+    sub_category: "Blouses"
+    brand: ""    
+    max_count: 50
+
+
+  - main_category: "Women Clothing"
+    sub_category: "Tank Tops & Camis"
+    brand: ""    
+    max_count: 50  
+
+  - main_category: "Women Clothing"
+    sub_category: "Bottoms"
+    brand: ""    
+    max_count: 50
+
+
+  - main_category: "Women Clothing"
+    sub_category: "Co-ords"
+    brand: ""    
+    max_count: 50  
+
+  - main_category: "Women Clothing"
+    sub_category: "Denim"
+    brand: ""    
+    max_count: 50
+
+
+  - main_category: "Women Clothing"
+    sub_category: "Jumpsuits & Bodysuits"
+    brand: ""    
+    max_count: 50  
+
+  - main_category: "Women Clothing"
+    sub_category: "Beachwear"
+    brand: ""    
+    max_count: 50
+
+
+  - main_category: "Women Clothing"
+    sub_category: "Suits"
+    brand: "SHEIN"    
+    max_count: 50  
+
+  - main_category: "Women Clothing"
+    sub_category: "Knitwear"
+    brand: ""    
+    max_count: 50
+
+
+  - main_category: "Women Clothing"
+    sub_category: "Sweatshirts"
+    brand: "SHEIN"    
+    max_count: 50  
+
+  - main_category: "Women Clothing"
+    sub_category: "Outerwear"
+    brand: ""    
+    max_count: 50
+
+
+  - main_category: "Women Clothing"
+    sub_category: "Maternity Clothing"
+    brand: ""    
+    max_count: 50  
+
   - main_category: "Women Clothing"
     sub_category: "Wedding"
-    brand: ""
+    brand: ""    
     max_count: 50
+
 
   - main_category: "Women Clothing"
     sub_category: "Party Wear"
-    brand: "SHEIN"
+    brand: ""    
     max_count: 50
 ```
 
