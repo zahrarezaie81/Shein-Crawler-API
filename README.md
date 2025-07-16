@@ -192,7 +192,7 @@ categories:
 Run from the **root** folder (after activating your venv):
 
 ```bash
-.env\Scriptsctivate
+.venv\Scripts\activate
 python -m project.crawler.auth_fetch
 ```
 
@@ -205,7 +205,7 @@ This will generate `auth_data.json` with valid cookies and headers.
 Run from the **project root folder**:
 
 ```bash
-.env\Scriptsctivate
+.venv\Scripts\activate
 uvicorn project.main:app --reload
 ```
 
