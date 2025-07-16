@@ -1,6 +1,6 @@
 # 🛍️ Shein Product Crawler & FastAPI Project
 
-This project is a web crawler and REST API that collects and serves product data from the Shein website. It uses Playwright for browser automation and FastAPI for building a backend API. Data is stored in a MySQL database and managed through Alembic migrations.
+This project is a web crawler and REST API that collects and serves product data from the Shein website. It uses **Playwright** for browser automation and **FastAPI** for the backend. Data is stored in a **MySQL** database and migrations are handled by **Alembic**.
 
 ---
 
@@ -10,24 +10,28 @@ Open a terminal and run:
 
 ```bash
 git clone https://github.com/zahrarezaie81/Shein-Crawler-API.git
-cd Shein_Project
+cd Shein-Crawler-API
 ```
-
-> Replace `<REPO_URL>` with the actual repository URL.
 
 ---
 
 ## 📁 Project Structure
 
 ```
-Shein_Project/
+Shein-Crawler-API/
+├── alembic/
+├── output_jsons/
 ├── project/
+│   ├── config/
 │   ├── crawler/
 │   ├── database/
+│   ├── image_processor/
 │   ├── loggs/
 │   ├── main.py
-├── alembic/
+│   └── __init__.py
+├── .gitignore
 ├── alembic.ini
+├── README.md
 ├── requirements.txt
 └── venv/
 ```
@@ -38,14 +42,14 @@ Shein_Project/
 
 ### 1. 📦 Create & Activate Virtual Environment
 
-Run these commands from the `Shein_Project` root folder:
+From the `Shein-Crawler-API` root folder:
 
 ```bash
 python -m venv venv
-.env\Scriptsctivate
+.venv\Scripts\activate
 ```
 
-Then install all required packages:
+Then install the dependencies:
 
 ```bash
 pip install -r requirements.txt
@@ -55,9 +59,10 @@ pip install -r requirements.txt
 
 ### 2. 🛠️ Configure the Database
 
-Create a MySQL database named `shein_project`.
+Create a **MySQL** database named `shein_project`.
 
-Update your credentials in this file:
+Then update your DB credentials inside:
+
 ```
 project/database/database.py
 ```
@@ -70,22 +75,22 @@ DATABASE_URL = "mysql+pymysql://your_user:your_password@localhost/shein_project"
 
 ---
 
-### 3. 🧠 Setup Chrome & Auth
+### 3. 🧠 Setup Chrome & Authentication
 
-Update these variables in `project/crawler/auth_fetch.py`:
+Update the following variables in `project/crawler/auth_fetch.py`:
 
 ```python
 chrome_path = "C:/Program Files/Google/Chrome/Application/chrome.exe"
 user_data_dir = "C:/Users/yourname/AppData/Local/Google/Chrome/User Data/Profile 3"
 ```
 
-Make sure you're logged into [shein.com](https://shein.com) with this profile.
+Make sure you're already logged into [shein.com](https://shein.com) using that Chrome profile.
 
 ---
 
 ### 4. 🧪 Configure Crawling Categories
 
-Edit the YAML config file: `project/crawler/config.yaml`
+Edit the file `project/crawler/config.yaml`:
 
 ```yaml
 categories:
@@ -104,40 +109,40 @@ categories:
 
 ### 5. 🔐 Fetch Auth Headers
 
-> Must be run from the **root** folder and **after activating venv**.
+Run from the **root** folder (after activating your venv):
 
 ```bash
 .env\Scriptsctivate
 python -m project.crawler.auth_fetch
 ```
 
-This generates `auth_data.json` with your valid cookies and headers.
+This will generate `auth_data.json` with valid cookies and headers.
 
 ---
 
 ### 6. 🚀 Run FastAPI Server
 
-From the root folder:
+Run from the **project root folder**:
 
 ```bash
 .env\Scriptsctivate
 uvicorn project.main:app --reload
 ```
 
-Visit the Swagger API docs at:  
+Then visit the Swagger docs:  
 📎 http://127.0.0.1:8000/docs
 
 ---
 
 ## 🧬 Alembic Migrations
 
-Generate new migration:
+To generate a new migration:
 
 ```bash
 alembic revision --autogenerate -m "your message"
 ```
 
-Apply migration:
+To apply migrations:
 
 ```bash
 alembic upgrade head
