@@ -2,14 +2,14 @@ categories:
 
 
   - main_category: "Women Clothing"
-    sub_category: "Wedding"
+    sub_category: "Tops"
     brand: ""    
     max_count: 50
 
 
   - main_category: "Women Clothing"
-    sub_category: "Party Wear"
-    brand: ""    
+    sub_category: "Denim"
+    brand: "SHEIN"    
     max_count: 50 
 
 
